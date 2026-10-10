@@ -16,6 +16,7 @@ Reply with JSON only, in exactly this shape:
 Rules:
 - status must be exactly one of: "in", "out", "maybe".
 - If someone brings a guest, add the guest as a separate player with status "in".
+- Include every person who posted, even those who are out.
 
 Chat:
 {CHAT}"""
