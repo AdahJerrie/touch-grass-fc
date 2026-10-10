@@ -1,5 +1,6 @@
 import json
 import requests
+from teams import make_teams
 
 CHAT = """
 Tobi: I'm in for Saturday
@@ -37,5 +38,14 @@ response = requests.post(
 reply = response.json()["message"]["content"]
 data = json.loads(reply)
 
-for player in data["players"]:
-    print(player["name"], "->", player["status"])
+with open("players.json") as f:
+    ratings = json.load(f)
+
+playing = [p["name"] for p in data["players"] if p["status"] == "in"]
+maybes = [p["name"] for p in data["players"] if p["status"] == "maybe"]
+
+team_a, team_b, score_a, score_b = make_teams(playing, ratings)
+
+print("Team A:", ", ".join(team_a), f"(strength {score_a})")
+print("Team B:", ", ".join(team_b), f"(strength {score_b})")
+print("Maybe (reserves):", ", ".join(maybes) or "none")
