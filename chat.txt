@@ -1,0 +1,8 @@
+CHAT = """
+Tobi: I'm in for Saturday
+Kevin: count me in, bringing my cousin Brian
+Amina: can't make it, work
+Joel: maybe, depends on my shift
+Wanjiru: in!
+Peter: sorry guys, out this week
+"""
