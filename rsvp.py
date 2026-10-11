@@ -2,14 +2,9 @@ import json
 import requests
 from teams import make_teams
 
-CHAT = """
-Tobi: I'm in for Saturday
-Kevin: count me in, bringing my cousin Brian
-Amina: can't make it, work
-Joel: maybe, depends on my shift
-Wanjiru: in!
-Peter: sorry guys, out this week
-"""
+# 1. Read the chat you pasted into chat.txt
+with open("chat.txt") as f:
+    CHAT = f.read()
 
 PROMPT = f"""You read a football group chat and list who is playing on Saturday.
 Reply with JSON only, in exactly this shape:
@@ -22,6 +17,7 @@ Rules:
 Chat:
 {CHAT}"""
 
+# 2. Ask the local model (the "secretary") to read it
 response = requests.post(
     "http://localhost:11434/api/chat",
     json={
@@ -35,12 +31,16 @@ response = requests.post(
     timeout=300,
 )
 
-reply = response.json()["message"]["content"]
-data = json.loads(reply)
+data = json.loads(response.json()["message"]["content"])
 
-with open("players.json") as f:
-    ratings = json.load(f)
+# 3. Load ratings if the file exists (optional)
+try:
+    with open("players.json") as f:
+        ratings = json.load(f)
+except FileNotFoundError:
+    ratings = {}
 
+# 4. Split into teams (the "coach")
 playing = [p["name"] for p in data["players"] if p["status"] == "in"]
 maybes = [p["name"] for p in data["players"] if p["status"] == "maybe"]
 
